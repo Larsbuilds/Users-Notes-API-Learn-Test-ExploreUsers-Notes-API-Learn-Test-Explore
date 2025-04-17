@@ -1,9 +1,15 @@
-// Bring in the http module
+// Bring in the required modules
 import http from 'http';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { createReadStream } from 'fs';
 // Import CRUD operations
 import { createPost, deletePost, getPosts, getPostById, updatePost } from './crudOperations.js';
 // Import utility functions
-import { regex, returnErrorWithMessage } from './utils.js';
+import { regex, returnErrorWithMessage, addCorsHeaders } from './utils.js';
+
+// Get the directory name of the current module
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Base resource
 const resource = '/posts';
@@ -11,6 +17,28 @@ const resource = '/posts';
 // Request handler to handle all requests
 const requestHandler = async (req, res) => {
   const { method, url } = req;
+
+  // Handle OPTIONS requests for CORS
+  if (method === 'OPTIONS') {
+    addCorsHeaders(res);
+    res.statusCode = 204;
+    return res.end();
+  }
+
+  // Serve static files from public directory
+  if (method === 'GET' && (url === '/' || url === '/index.html')) {
+    const filePath = join(__dirname, 'public', url === '/' ? 'index.html' : url);
+    const stream = createReadStream(filePath);
+    
+    stream.on('error', () => {
+      returnErrorWithMessage(res, 404, 'File not found');
+    });
+
+    addCorsHeaders(res);
+    res.setHeader('Content-Type', 'text/html');
+    return stream.pipe(res);
+  }
+
   if (url === resource) {
     if (method === 'GET') return await getPosts(req, res);
     if (method === 'POST') return await createPost(req, res);
@@ -24,6 +52,7 @@ const requestHandler = async (req, res) => {
     return returnErrorWithMessage(res, 404, 'Resource Not Found');
   }
 };
+
 // Create a server
 const server = http.createServer(requestHandler);
 // Set the port

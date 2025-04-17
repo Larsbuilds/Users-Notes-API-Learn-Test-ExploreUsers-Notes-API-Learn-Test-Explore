@@ -1,4 +1,15 @@
 /**
+ * Adds CORS headers to the response.
+ *
+ * @param {Object} res - The response object.
+ */
+export const addCorsHeaders = (res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+};
+
+/**
  * Sends an error response with a specified status code and message.
  *
  * @param {Object} res - The response object.
@@ -8,6 +19,7 @@
  * @example returnErrorWithMessage(res, 404, 'Resource Not Found');
  */
 export const returnErrorWithMessage = (res, code, message) => {
+  addCorsHeaders(res);
   res.statusCode = code || 500;
   res.setHeader('Content-Type', 'application/json');
   return res.end(JSON.stringify({ message: message || 'Internal Server Error' }));
@@ -32,9 +44,9 @@ export const processBodyFromRequest = req =>
  *
  * @param {string} resource - The resource to create the regular expression for.
  * @returns {RegExp} - The regular expression pattern.
- * @example regex('/posts') => /^\/posts\/[a-zA-Z0-9]+$/
+ * @example regex('/posts') => /^\/posts\/\d+$/
  */
-export const regex = resource => new RegExp(`^${resource}\/[a-zA-Z0-9]+$`);
+export const regex = resource => new RegExp(`^${resource}\/\\d+$`);
 
 /**
  * Get the resource ID from the given URL.

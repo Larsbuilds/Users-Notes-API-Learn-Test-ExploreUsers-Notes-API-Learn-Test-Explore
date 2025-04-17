@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog API: Learn, Test & Explore</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .info-section {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            margin-bottom: 30px;
+        }
+        .command {
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #666;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        #response {
+            background-color: #f8f8f8;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 6px;
+            border-radius: 3px;
+            color: white;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .get { background-color: #61affe; }
+        .post { background-color: #49cc90; }
+        .put { background-color: #fca130; }
+        .delete { background-color: #f93e3e; }
+        h3 {
+            color: #333;
+            margin-top: 20px;
+        }
+        details {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        details summary {
+            cursor: pointer;
+            padding: 5px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        details summary:hover {
+            background-color: #f8f9fa;
+        }
+        details > div {
+            padding: 10px;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blog API: Learn, Test & Explore</h1>
+    
+    <div class="section info-section">
+        <h2>Project Overview</h2>
+        <p>This is a RESTful API built with Node.js and PostgreSQL using Neon as the database provider. The API allows you to perform CRUD (Create, Read, Update, Delete) operations on blog posts.</p>
+
+        <details>
+            <summary>Understanding curl Commands</summary>
+            <div>
+                <p>curl (Client URL) is a command-line tool for transferring data using various protocols. It's widely used for testing APIs because:</p>
+                <ul>
+                    <li><strong>Universal Tool:</strong> Available on almost all operating systems (Windows, Mac, Linux)</li>
+                    <li><strong>No GUI Required:</strong> Can be used directly from the terminal</li>
+                    <li><strong>Debugging:</strong> Provides detailed error messages and response information</li>
+                    <li><strong>Scripting:</strong> Can be easily integrated into shell scripts for automation</li>
+                </ul>
+
+                <p><strong>Common curl Options Used in This API:</strong></p>
+                <ul>
+                    <li><code>-X</code> - Specifies the HTTP method (GET, POST, PUT, DELETE)</li>
+                    <li><code>-H</code> - Adds headers to the request (e.g., "Content-Type: application/json")</li>
+                    <li><code>-d</code> - Sends data in the request body</li>
+                </ul>
+
+                <p><strong>Example Breakdown:</strong></p>
+                <div class="code-block">curl -X POST http://localhost:3000/posts \
+    -H "Content-Type: application/json" \
+    -d '{"title": "My Post", "author": "John", "content": "Content"}'</div>
+                <ul>
+                    <li><code>-X POST</code>: Use POST method</li>
+                    <li><code>-H "Content-Type: application/json"</code>: Tell server we're sending JSON</li>
+                    <li><code>-d '{...}'</code>: The actual JSON data being sent</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Technology Stack</summary>
+            <div>
+                <ul>
+                    <li><strong>Backend:</strong> Node.js with native HTTP module</li>
+                    <li><strong>Database:</strong> PostgreSQL hosted on Neon</li>
+                    <li><strong>Database Driver:</strong> node-postgres (pg)</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Database Setup</summary>
+            <div>
+                <p>The database uses the following schema for the posts table:</p>
+                <div class="code-block">CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</div>
+            </div>
+        </details>
+
+        <details>
+            <summary>Environment Configuration</summary>
+            <div>
+                <p>The application uses environment variables for database configuration:</p>
+                <div class="code-block"># .env file
+PG_URI=your_neon_connection_string</div>
+            </div>
+        </details>
+
+        <details>
+            <summary>API Endpoints</summary>
+            <div>
+                <ul>
+                    <li><strong>GET /posts</strong> - Retrieve all posts</li>
+                    <li><strong>GET /posts/:id</strong> - Retrieve a specific post</li>
+                    <li><strong>POST /posts</strong> - Create a new post</li>
+                    <li><strong>PUT /posts/:id</strong> - Update an existing post</li>
+                    <li><strong>DELETE /posts/:id</strong> - Delete a post</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Request/Response Format</summary>
+            <div>
+                <p>For POST and PUT requests, the request body should be JSON with the following structure:</p>
+                <div class="code-block">{
+    "title": "Post Title",
+    "author": "Author Name",
+    "content": "Post content goes here"
+}</div>
+            </div>
+        </details>
+
+        <details>
+            <summary>Error Handling</summary>
+            <div>
+                <ul>
+                    <li><strong>404</strong> - Resource Not Found</li>
+                    <li><strong>400</strong> - Bad Request (missing required fields)</li>
+                    <li><strong>405</strong> - Method Not Allowed</li>
+                    <li><strong>500</strong> - Internal Server Error</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <div id="response">Response will appear here...</div>
+
+    <div class="section">
+        <h2><span class="method get">GET</span> Get All Posts</h2>
+        <p>Retrieves all posts from the database</p>
+        <div class="command">curl http://localhost:3000/posts</div>
+        <button onclick="getPosts()">Get All Posts</button>
+    </div>
+
+    <div class="section">
+        <h2><span class="method get">GET</span> Get Single Post</h2>
+        <p>Retrieves a specific post by ID</p>
+        <div class="command">curl http://localhost:3000/posts/{id}</div>
+        <input type="number" id="getPostId" placeholder="Enter post ID">
+        <button onclick="getPost()">Get Post</button>
+    </div>
+
+    <div class="section">
+        <h2><span class="method post">POST</span> Create New Post</h2>
+        <p>Creates a new blog post</p>
+        <div class="command">curl -X POST http://localhost:3000/posts -H "Content-Type: application/json" -d '{"title": "My Post", "author": "Author Name", "content": "Post content"}'</div>
+        <input type="text" id="createTitle" placeholder="Title">
+        <input type="text" id="createAuthor" placeholder="Author">
+        <textarea id="createContent" placeholder="Content" rows="4"></textarea>
+        <button onclick="createPost()">Create Post</button>
+    </div>
+
+    <div class="section">
+        <h2><span class="method put">PUT</span> Update Post</h2>
+        <p>Updates an existing post by ID</p>
+        <div class="command">curl -X PUT http://localhost:3000/posts/{id} -H "Content-Type: application/json" -d '{"title": "Updated Title", "author": "Updated Author", "content": "Updated content"}'</div>
+        <input type="number" id="updatePostId" placeholder="Post ID to update">
+        <input type="text" id="updateTitle" placeholder="New Title">
+        <input type="text" id="updateAuthor" placeholder="New Author">
+        <textarea id="updateContent" placeholder="New Content" rows="4"></textarea>
+        <button onclick="updatePost()">Update Post</button>
+    </div>
+
+    <div class="section">
+        <h2><span class="method delete">DELETE</span> Delete Post</h2>
+        <p>Deletes a post by ID</p>
+        <div class="command">curl -X DELETE http://localhost:3000/posts/{id}</div>
+        <input type="number" id="deletePostId" placeholder="Post ID to delete">
+        <button onclick="deletePost()">Delete Post</button>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+        const responseDiv = document.getElementById('response');
+
+        function displayResponse(data) {
+            responseDiv.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+
+        async function handleRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                displayResponse(data);
+            } catch (error) {
+                displayResponse('Error: ' + error.message);
+            }
+        }
+
+        async function getPosts() {
+            await handleRequest(`${API_URL}/posts`);
+        }
+
+        async function getPost() {
+            const id = document.getElementById('getPostId').value;
+            if (!id) {
+                displayResponse('Please enter a post ID');
+                return;
+            }
+            await handleRequest(`${API_URL}/posts/${id}`);
+        }
+
+        async function createPost() {
+            const title = document.getElementById('createTitle').value;
+            const author = document.getElementById('createAuthor').value;
+            const content = document.getElementById('createContent').value;
+
+            if (!title || !author || !content) {
+                displayResponse('Please fill in all fields');
+                return;
+            }
+
+            await handleRequest(`${API_URL}/posts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, author, content })
+            });
+        }
+
+        async function updatePost() {
+            const id = document.getElementById('updatePostId').value;
+            const title = document.getElementById('updateTitle').value;
+            const author = document.getElementById('updateAuthor').value;
+            const content = document.getElementById('updateContent').value;
+
+            if (!id || !title || !author || !content) {
+                displayResponse('Please fill in all fields');
+                return;
+            }
+
+            await handleRequest(`${API_URL}/posts/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, author, content })
+            });
+        }
+
+        async function deletePost() {
+            const id = document.getElementById('deletePostId').value;
+            if (!id) {
+                displayResponse('Please enter a post ID');
+                return;
+            }
+            await handleRequest(`${API_URL}/posts/${id}`, {
+                method: 'DELETE'
+            });
+        }
+    </script>
+</body>
+</html> 
