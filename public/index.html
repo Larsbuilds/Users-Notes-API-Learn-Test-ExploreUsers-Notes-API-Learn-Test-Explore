@@ -5,129 +5,272 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users & Notes API: Learn, Test & Explore</title>
     <style>
+        :root {
+            --primary-color: #0d6efd;
+            --success-color: #4CAF50;
+            --danger-color: #f93e3e;
+            --warning-color: #fca130;
+            --info-color: #61affe;
+            --border-color: #ddd;
+            --bg-light: #f8f9fa;
+            --text-dark: #333;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1000px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
+            background-color: #f5f5f5;
         }
+
         .section {
-            border: 1px solid #ddd;
-            padding: 20px;
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 25px;
             margin-bottom: 20px;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
         .info-section {
-            background-color: #f8f9fa;
-            border-left: 4px solid #0d6efd;
+            background-color: var(--bg-light);
+            border-left: 4px solid var(--primary-color);
             margin-bottom: 30px;
         }
+
         .command {
             background-color: #f5f5f5;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
             border-left: 4px solid #666;
-            font-family: monospace;
+            font-family: 'Consolas', monospace;
             overflow-x: auto;
+            border-radius: 4px;
         }
+
         .code-block {
-            background-color: #f8f9fa;
+            background-color: var(--bg-light);
             padding: 15px;
             border-radius: 4px;
-            font-family: monospace;
+            font-family: 'Consolas', monospace;
             white-space: pre;
             overflow-x: auto;
         }
+
         button {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
             color: white;
-            padding: 10px 15px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             margin: 5px 0;
+            font-weight: 500;
+            transition: background-color 0.2s;
         }
+
         button:hover {
             background-color: #45a049;
+            transform: translateY(-1px);
         }
+
         input, textarea {
             width: 100%;
-            padding: 8px;
-            margin: 5px 0;
+            padding: 12px;
+            margin: 8px 0;
             box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
         }
-        #response {
-            background-color: #f8f8f8;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 4px;
-            white-space: pre-wrap;
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1);
         }
+
         .method {
             display: inline-block;
-            padding: 3px 6px;
-            border-radius: 3px;
+            padding: 4px 8px;
+            border-radius: 4px;
             color: white;
             font-size: 12px;
             margin-right: 5px;
+            font-weight: 500;
         }
-        .get { background-color: #61affe; }
-        .post { background-color: #49cc90; }
-        .put { background-color: #fca130; }
-        .delete { background-color: #f93e3e; }
-        h3 {
-            color: #333;
+
+        .get { background-color: var(--info-color); }
+        .post { background-color: var(--success-color); }
+        .put { background-color: var(--warning-color); }
+        .delete { background-color: var(--danger-color); }
+
+        h1, h2, h3 {
+            color: var(--text-dark);
             margin-top: 20px;
         }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
         details {
-            margin: 10px 0;
-            padding: 10px;
+            margin: 15px 0;
+            padding: 15px;
             background-color: white;
-            border-radius: 4px;
+            border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+
         details summary {
             cursor: pointer;
-            padding: 5px;
-            font-weight: bold;
-            color: #0d6efd;
-        }
-        details summary:hover {
-            background-color: #f8f9fa;
-        }
-        details > div {
             padding: 10px;
-            margin-top: 10px;
-            border-top: 1px solid #eee;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
         }
+
+        details summary:hover {
+            background-color: var(--bg-light);
+            border-radius: 4px;
+        }
+
+        details > div {
+            padding: 15px;
+            margin-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
         .tabs {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
         .tab {
-            padding: 10px 20px;
+            padding: 12px 24px;
             cursor: pointer;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            border-radius: 4px 4px 0 0;
-            margin-right: 5px;
+            border: none;
+            border-radius: 6px;
+            margin-right: 10px;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: all 0.2s;
         }
+
+        .tab:hover {
+            background-color: var(--bg-light);
+        }
+
         .tab.active {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #0d6efd;
+            background-color: var(--primary-color);
+            color: white;
         }
+
         .tab-content {
             display: none;
         }
+
         .tab-content.active {
             display: block;
+        }
+
+        /* Response Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            margin: 50px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .close-modal:hover {
+            color: var(--danger-color);
+        }
+
+        #response {
+            background-color: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-family: 'Consolas', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Response Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Users & Notes API: Learn, Test & Explore</h1>
     
+    <!-- Response Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Response Modal -->
+    <div id="responseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2>API Response</h2>
+            <div id="response"></div>
+        </div>
+    </div>
+
     <div class="section info-section">
         <h2>Project Overview</h2>
         <p>This is a RESTful API built with Node.js, Express, and PostgreSQL using Sequelize as the ORM. The API allows you to perform CRUD operations on users and their notes, with a one-to-many relationship between users and notes.</p>
@@ -279,8 +422,6 @@
         </div>
     </div>
 
-    <div id="response">Response will appear here...</div>
-
     <script>
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -293,13 +434,35 @@
             document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
         }
 
+        function showResponse(data) {
+            const modal = document.getElementById('responseModal');
+            const response = document.getElementById('response');
+            response.textContent = JSON.stringify(data, null, 2);
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('responseModal').style.display = 'none';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
         async function getUsers() {
             try {
                 const response = await fetch('http://localhost:3000/users');
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('Users retrieved successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error retrieving users');
             }
         }
 
@@ -308,9 +471,11 @@
             try {
                 const response = await fetch(`http://localhost:3000/users/${id}`);
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('User retrieved successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error retrieving user');
             }
         }
 
@@ -329,9 +494,11 @@
                     body: JSON.stringify(userData)
                 });
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('User created successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error creating user');
             }
         }
 
@@ -351,9 +518,11 @@
                     body: JSON.stringify(userData)
                 });
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('User updated successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error updating user');
             }
         }
 
@@ -364,9 +533,11 @@
                     method: 'DELETE'
                 });
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('User deleted successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error deleting user');
             }
         }
 
@@ -374,9 +545,11 @@
             try {
                 const response = await fetch('http://localhost:3000/notes');
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('Notes retrieved successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error retrieving notes');
             }
         }
 
@@ -385,9 +558,11 @@
             try {
                 const response = await fetch(`http://localhost:3000/notes/${id}`);
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('Note retrieved successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error retrieving note');
             }
         }
 
@@ -405,9 +580,11 @@
                     body: JSON.stringify(noteData)
                 });
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('Note created successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error creating note');
             }
         }
 
@@ -425,9 +602,11 @@
                     body: JSON.stringify(noteData)
                 });
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('Note updated successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error updating note');
             }
         }
 
@@ -438,9 +617,11 @@
                     method: 'DELETE'
                 });
                 const data = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+                showResponse(data);
+                showToast('Note deleted successfully');
             } catch (error) {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
+                showResponse({ error: error.message });
+                showToast('Error deleting note');
             }
         }
     </script>
