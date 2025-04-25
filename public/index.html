@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog API: Learn, Test & Explore</title>
+    <title>Users & Notes API: Learn, Test & Explore</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -101,238 +101,347 @@
             margin-top: 10px;
             border-top: 1px solid #eee;
         }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #0d6efd;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <h1>Blog API: Learn, Test & Explore</h1>
+    <h1>Users & Notes API: Learn, Test & Explore</h1>
     
     <div class="section info-section">
         <h2>Project Overview</h2>
-        <p>This is a RESTful API built with Node.js and PostgreSQL using Neon as the database provider. The API allows you to perform CRUD (Create, Read, Update, Delete) operations on blog posts.</p>
-
-        <details>
-            <summary>Understanding curl Commands</summary>
-            <div>
-                <p>curl (Client URL) is a command-line tool for transferring data using various protocols. It's widely used for testing APIs because:</p>
-                <ul>
-                    <li><strong>Universal Tool:</strong> Available on almost all operating systems (Windows, Mac, Linux)</li>
-                    <li><strong>No GUI Required:</strong> Can be used directly from the terminal</li>
-                    <li><strong>Debugging:</strong> Provides detailed error messages and response information</li>
-                    <li><strong>Scripting:</strong> Can be easily integrated into shell scripts for automation</li>
-                </ul>
-
-                <p><strong>Common curl Options Used in This API:</strong></p>
-                <ul>
-                    <li><code>-X</code> - Specifies the HTTP method (GET, POST, PUT, DELETE)</li>
-                    <li><code>-H</code> - Adds headers to the request (e.g., "Content-Type: application/json")</li>
-                    <li><code>-d</code> - Sends data in the request body</li>
-                </ul>
-
-                <p><strong>Example Breakdown:</strong></p>
-                <div class="code-block">curl -X POST http://localhost:3000/posts \
-    -H "Content-Type: application/json" \
-    -d '{"title": "My Post", "author": "John", "content": "Content"}'</div>
-                <ul>
-                    <li><code>-X POST</code>: Use POST method</li>
-                    <li><code>-H "Content-Type: application/json"</code>: Tell server we're sending JSON</li>
-                    <li><code>-d '{...}'</code>: The actual JSON data being sent</li>
-                </ul>
-            </div>
-        </details>
+        <p>This is a RESTful API built with Node.js, Express, and PostgreSQL using Sequelize as the ORM. The API allows you to perform CRUD operations on users and their notes, with a one-to-many relationship between users and notes.</p>
 
         <details>
             <summary>Technology Stack</summary>
             <div>
                 <ul>
-                    <li><strong>Backend:</strong> Node.js with native HTTP module</li>
-                    <li><strong>Database:</strong> PostgreSQL hosted on Neon</li>
-                    <li><strong>Database Driver:</strong> node-postgres (pg)</li>
+                    <li><strong>Backend:</strong> Node.js with Express</li>
+                    <li><strong>Database:</strong> PostgreSQL</li>
+                    <li><strong>ORM:</strong> Sequelize</li>
                 </ul>
             </div>
         </details>
 
         <details>
-            <summary>Database Setup</summary>
+            <summary>Database Schema</summary>
             <div>
-                <p>The database uses the following schema for the posts table:</p>
-                <div class="code-block">CREATE TABLE posts (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    author VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);</div>
-            </div>
-        </details>
+                <p>The database uses the following schema:</p>
+                <div class="code-block">// User Model
+{
+  firstName: STRING,
+  lastName: STRING,
+  email: STRING (unique)
+}
 
-        <details>
-            <summary>Environment Configuration</summary>
-            <div>
-                <p>The application uses environment variables for database configuration:</p>
-                <div class="code-block"># .env file
-PG_URI=your_neon_connection_string</div>
+// Note Model
+{
+  content: TEXT,
+  userId: INTEGER (foreign key)
+}</div>
             </div>
         </details>
 
         <details>
             <summary>API Endpoints</summary>
             <div>
+                <h3>Users</h3>
                 <ul>
-                    <li><strong>GET /posts</strong> - Retrieve all posts</li>
-                    <li><strong>GET /posts/:id</strong> - Retrieve a specific post</li>
-                    <li><strong>POST /posts</strong> - Create a new post</li>
-                    <li><strong>PUT /posts/:id</strong> - Update an existing post</li>
-                    <li><strong>DELETE /posts/:id</strong> - Delete a post</li>
+                    <li><strong>GET /users</strong> - Get all users with their notes</li>
+                    <li><strong>GET /users/:id</strong> - Get a specific user with their notes</li>
+                    <li><strong>POST /users</strong> - Create a new user</li>
+                    <li><strong>PUT /users/:id</strong> - Update a user</li>
+                    <li><strong>DELETE /users/:id</strong> - Delete a user</li>
+                </ul>
+                <h3>Notes</h3>
+                <ul>
+                    <li><strong>GET /notes</strong> - Get all notes with their users</li>
+                    <li><strong>GET /notes/:id</strong> - Get a specific note with its user</li>
+                    <li><strong>POST /notes</strong> - Create a new note</li>
+                    <li><strong>PUT /notes/:id</strong> - Update a note</li>
+                    <li><strong>DELETE /notes/:id</strong> - Delete a note</li>
                 </ul>
             </div>
         </details>
+    </div>
 
-        <details>
-            <summary>Request/Response Format</summary>
-            <div>
-                <p>For POST and PUT requests, the request body should be JSON with the following structure:</p>
-                <div class="code-block">{
-    "title": "Post Title",
-    "author": "Author Name",
-    "content": "Post content goes here"
-}</div>
-            </div>
-        </details>
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('users')">Users</div>
+        <div class="tab" onclick="showTab('notes')">Notes</div>
+    </div>
 
-        <details>
-            <summary>Error Handling</summary>
-            <div>
-                <ul>
-                    <li><strong>404</strong> - Resource Not Found</li>
-                    <li><strong>400</strong> - Bad Request (missing required fields)</li>
-                    <li><strong>405</strong> - Method Not Allowed</li>
-                    <li><strong>500</strong> - Internal Server Error</li>
-                </ul>
-            </div>
-        </details>
+    <div id="users" class="tab-content active">
+        <div class="section">
+            <h2><span class="method get">GET</span> Get All Users</h2>
+            <p>Retrieves all users with their notes</p>
+            <div class="command">curl http://localhost:3000/users</div>
+            <button onclick="getUsers()">Get All Users</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method get">GET</span> Get Single User</h2>
+            <p>Retrieves a specific user by ID with their notes</p>
+            <div class="command">curl http://localhost:3000/users/{id}</div>
+            <input type="number" id="getUserId" placeholder="Enter user ID">
+            <button onclick="getUser()">Get User</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method post">POST</span> Create New User</h2>
+            <p>Creates a new user</p>
+            <div class="command">curl -X POST http://localhost:3000/users -H "Content-Type: application/json" -d '{"firstName": "John", "lastName": "Doe", "email": "john@example.com"}'</div>
+            <input type="text" id="createFirstName" placeholder="First Name">
+            <input type="text" id="createLastName" placeholder="Last Name">
+            <input type="email" id="createEmail" placeholder="Email">
+            <button onclick="createUser()">Create User</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method put">PUT</span> Update User</h2>
+            <p>Updates an existing user by ID</p>
+            <div class="command">curl -X PUT http://localhost:3000/users/{id} -H "Content-Type: application/json" -d '{"firstName": "John", "lastName": "Doe", "email": "john@example.com"}'</div>
+            <input type="number" id="updateUserId" placeholder="User ID to update">
+            <input type="text" id="updateFirstName" placeholder="New First Name">
+            <input type="text" id="updateLastName" placeholder="New Last Name">
+            <input type="email" id="updateEmail" placeholder="New Email">
+            <button onclick="updateUser()">Update User</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method delete">DELETE</span> Delete User</h2>
+            <p>Deletes a user by ID</p>
+            <div class="command">curl -X DELETE http://localhost:3000/users/{id}</div>
+            <input type="number" id="deleteUserId" placeholder="User ID to delete">
+            <button onclick="deleteUser()">Delete User</button>
+        </div>
+    </div>
+
+    <div id="notes" class="tab-content">
+        <div class="section">
+            <h2><span class="method get">GET</span> Get All Notes</h2>
+            <p>Retrieves all notes with their users</p>
+            <div class="command">curl http://localhost:3000/notes</div>
+            <button onclick="getNotes()">Get All Notes</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method get">GET</span> Get Single Note</h2>
+            <p>Retrieves a specific note by ID with its user</p>
+            <div class="command">curl http://localhost:3000/notes/{id}</div>
+            <input type="number" id="getNoteId" placeholder="Enter note ID">
+            <button onclick="getNote()">Get Note</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method post">POST</span> Create New Note</h2>
+            <p>Creates a new note for a user</p>
+            <div class="command">curl -X POST http://localhost:3000/notes -H "Content-Type: application/json" -d '{"content": "Note content", "userId": 1}'</div>
+            <input type="number" id="createNoteUserId" placeholder="User ID">
+            <textarea id="createNoteContent" placeholder="Note Content" rows="4"></textarea>
+            <button onclick="createNote()">Create Note</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method put">PUT</span> Update Note</h2>
+            <p>Updates an existing note by ID</p>
+            <div class="command">curl -X PUT http://localhost:3000/notes/{id} -H "Content-Type: application/json" -d '{"content": "Updated note content"}'</div>
+            <input type="number" id="updateNoteId" placeholder="Note ID to update">
+            <textarea id="updateNoteContent" placeholder="New Note Content" rows="4"></textarea>
+            <button onclick="updateNote()">Update Note</button>
+        </div>
+
+        <div class="section">
+            <h2><span class="method delete">DELETE</span> Delete Note</h2>
+            <p>Deletes a note by ID</p>
+            <div class="command">curl -X DELETE http://localhost:3000/notes/{id}</div>
+            <input type="number" id="deleteNoteId" placeholder="Note ID to delete">
+            <button onclick="deleteNote()">Delete Note</button>
+        </div>
     </div>
 
     <div id="response">Response will appear here...</div>
 
-    <div class="section">
-        <h2><span class="method get">GET</span> Get All Posts</h2>
-        <p>Retrieves all posts from the database</p>
-        <div class="command">curl http://localhost:3000/posts</div>
-        <button onclick="getPosts()">Get All Posts</button>
-    </div>
-
-    <div class="section">
-        <h2><span class="method get">GET</span> Get Single Post</h2>
-        <p>Retrieves a specific post by ID</p>
-        <div class="command">curl http://localhost:3000/posts/{id}</div>
-        <input type="number" id="getPostId" placeholder="Enter post ID">
-        <button onclick="getPost()">Get Post</button>
-    </div>
-
-    <div class="section">
-        <h2><span class="method post">POST</span> Create New Post</h2>
-        <p>Creates a new blog post</p>
-        <div class="command">curl -X POST http://localhost:3000/posts -H "Content-Type: application/json" -d '{"title": "My Post", "author": "Author Name", "content": "Post content"}'</div>
-        <input type="text" id="createTitle" placeholder="Title">
-        <input type="text" id="createAuthor" placeholder="Author">
-        <textarea id="createContent" placeholder="Content" rows="4"></textarea>
-        <button onclick="createPost()">Create Post</button>
-    </div>
-
-    <div class="section">
-        <h2><span class="method put">PUT</span> Update Post</h2>
-        <p>Updates an existing post by ID</p>
-        <div class="command">curl -X PUT http://localhost:3000/posts/{id} -H "Content-Type: application/json" -d '{"title": "Updated Title", "author": "Updated Author", "content": "Updated content"}'</div>
-        <input type="number" id="updatePostId" placeholder="Post ID to update">
-        <input type="text" id="updateTitle" placeholder="New Title">
-        <input type="text" id="updateAuthor" placeholder="New Author">
-        <textarea id="updateContent" placeholder="New Content" rows="4"></textarea>
-        <button onclick="updatePost()">Update Post</button>
-    </div>
-
-    <div class="section">
-        <h2><span class="method delete">DELETE</span> Delete Post</h2>
-        <p>Deletes a post by ID</p>
-        <div class="command">curl -X DELETE http://localhost:3000/posts/{id}</div>
-        <input type="number" id="deletePostId" placeholder="Post ID to delete">
-        <button onclick="deletePost()">Delete Post</button>
-    </div>
-
     <script>
-        const API_URL = 'https://web-production-3d30b.up.railway.app';
-        const responseDiv = document.getElementById('response');
-
-        function displayResponse(data) {
-            responseDiv.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
         }
 
-        async function handleRequest(url, options = {}) {
+        async function getUsers() {
             try {
-                const response = await fetch(url, options);
+                const response = await fetch('http://localhost:3000/users');
                 const data = await response.json();
-                displayResponse(data);
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
             } catch (error) {
-                displayResponse('Error: ' + error.message);
+                document.getElementById('response').textContent = 'Error: ' + error.message;
             }
         }
 
-        async function getPosts() {
-            await handleRequest(`${API_URL}/posts`);
+        async function getUser() {
+            const id = document.getElementById('getUserId').value;
+            try {
+                const response = await fetch(`http://localhost:3000/users/${id}`);
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
+            }
         }
 
-        async function getPost() {
-            const id = document.getElementById('getPostId').value;
-            if (!id) {
-                displayResponse('Please enter a post ID');
-                return;
+        async function createUser() {
+            const userData = {
+                firstName: document.getElementById('createFirstName').value,
+                lastName: document.getElementById('createLastName').value,
+                email: document.getElementById('createEmail').value
+            };
+            try {
+                const response = await fetch('http://localhost:3000/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
             }
-            await handleRequest(`${API_URL}/posts/${id}`);
         }
 
-        async function createPost() {
-            const title = document.getElementById('createTitle').value;
-            const author = document.getElementById('createAuthor').value;
-            const content = document.getElementById('createContent').value;
-
-            if (!title || !author || !content) {
-                displayResponse('Please fill in all fields');
-                return;
+        async function updateUser() {
+            const id = document.getElementById('updateUserId').value;
+            const userData = {
+                firstName: document.getElementById('updateFirstName').value,
+                lastName: document.getElementById('updateLastName').value,
+                email: document.getElementById('updateEmail').value
+            };
+            try {
+                const response = await fetch(`http://localhost:3000/users/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
             }
-
-            await handleRequest(`${API_URL}/posts`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, author, content })
-            });
         }
 
-        async function updatePost() {
-            const id = document.getElementById('updatePostId').value;
-            const title = document.getElementById('updateTitle').value;
-            const author = document.getElementById('updateAuthor').value;
-            const content = document.getElementById('updateContent').value;
-
-            if (!id || !title || !author || !content) {
-                displayResponse('Please fill in all fields');
-                return;
+        async function deleteUser() {
+            const id = document.getElementById('deleteUserId').value;
+            try {
+                const response = await fetch(`http://localhost:3000/users/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
             }
-
-            await handleRequest(`${API_URL}/posts/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, author, content })
-            });
         }
 
-        async function deletePost() {
-            const id = document.getElementById('deletePostId').value;
-            if (!id) {
-                displayResponse('Please enter a post ID');
-                return;
+        async function getNotes() {
+            try {
+                const response = await fetch('http://localhost:3000/notes');
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
             }
-            await handleRequest(`${API_URL}/posts/${id}`, {
-                method: 'DELETE'
-            });
+        }
+
+        async function getNote() {
+            const id = document.getElementById('getNoteId').value;
+            try {
+                const response = await fetch(`http://localhost:3000/notes/${id}`);
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function createNote() {
+            const noteData = {
+                content: document.getElementById('createNoteContent').value,
+                userId: document.getElementById('createNoteUserId').value
+            };
+            try {
+                const response = await fetch('http://localhost:3000/notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(noteData)
+                });
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function updateNote() {
+            const id = document.getElementById('updateNoteId').value;
+            const noteData = {
+                content: document.getElementById('updateNoteContent').value
+            };
+            try {
+                const response = await fetch(`http://localhost:3000/notes/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(noteData)
+                });
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function deleteNote() {
+            const id = document.getElementById('deleteNoteId').value;
+            try {
+                const response = await fetch(`http://localhost:3000/notes/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
+            }
         }
     </script>
 </body>

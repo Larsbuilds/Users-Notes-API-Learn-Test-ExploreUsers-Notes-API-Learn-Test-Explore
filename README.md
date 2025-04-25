@@ -1,6 +1,90 @@
-# Blog API: Learn, Test & Explore
+# Users & Notes API
 
-A modern, interactive API platform for learning and testing RESTful blog operations. Built with Node.js and PostgreSQL (Neon), this project provides both a functional API and an educational interface for understanding API interactions.
+A RESTful API built with Node.js, Express, and PostgreSQL using Sequelize as the ORM. This API allows you to perform CRUD operations on users and their notes, with a one-to-many relationship between users and notes.
+
+## Features
+
+- User management (CRUD operations)
+- Note management (CRUD operations)
+- One-to-many relationship between users and notes
+- Interactive web interface for testing API endpoints
+- Sequelize ORM for database operations
+- PostgreSQL database
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- PostgreSQL database
+- npm or yarn package manager
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Larsbuilds/Users-Notes-API-Learn-Test-Explore.git
+cd Users-Notes-API-Learn-Test-Explore
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Create a `.env` file in the root directory with the following content:
+```
+PG_URI=postgres://your_username:your_password@localhost:5432/your_database
+PORT=3000
+```
+
+4. Start the server:
+```bash
+npm run dev
+```
+
+## API Endpoints
+
+### Users
+
+- `GET /users` - Get all users with their notes
+- `GET /users/:id` - Get a specific user with their notes
+- `POST /users` - Create a new user
+- `PUT /users/:id` - Update a user
+- `DELETE /users/:id` - Delete a user
+
+### Notes
+
+- `GET /notes` - Get all notes with their users
+- `GET /notes/:id` - Get a specific note with its user
+- `POST /notes` - Create a new note
+- `PUT /notes/:id` - Update a note
+- `DELETE /notes/:id` - Delete a note
+
+## Database Schema
+
+### User Model
+```javascript
+{
+  firstName: STRING,
+  lastName: STRING,
+  email: STRING (unique)
+}
+```
+
+### Note Model
+```javascript
+{
+  content: TEXT,
+  userId: INTEGER (foreign key)
+}
+```
+
+## Interactive Interface
+
+The project includes an interactive web interface for testing the API endpoints. Open `public/index.html` in your browser to access it.
+
+## License
+
+ISC
 
 ## 🚀 Features
 
